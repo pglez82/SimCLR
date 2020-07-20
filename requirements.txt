@@ -2,4 +2,5 @@ torch
 torchvision
 tensorboard
 sacred
+progressbar2
 PyYAML
