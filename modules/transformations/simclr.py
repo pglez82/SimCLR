@@ -1,6 +1,21 @@
 import torchvision
 
 
+class Square(object):
+    """Make image squared"""
+    def __init__(self, fill=0):
+        assert isinstance(fill, int)
+        self.fill = fill
+
+    def __call__(self, img):
+        h, w = img.size[0],img.size[1]
+        
+        if h > w:
+        return torchvision.transforms.functional.pad(img, (0,((h-w)//2)), self.fill, 'constant')
+        else:
+        return torchvision.transforms.functional.pad(img, (((w-h)//2),0),self.fill, 'constant')
+
+
 class TransformsSimCLR:
     """
     A stochastic data augmentation module that transforms any given data example randomly 
