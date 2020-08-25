@@ -1,20 +1,33 @@
 import torchvision
 
-
 class Square(object):
     """Make image squared"""
-    def __init__(self, fill=0):
+    def __init__(self, fill=0,size=224):
         assert isinstance(fill, int)
+        assert isinstance(size, int)
         self.fill = fill
+        self.size = size
 
     def __call__(self, img):
-        h, w = img.size[0],img.size[1]
+
+        w, h = img.size[0],img.size[1]
         
         if h > w:
-        return torchvision.transforms.functional.pad(img, (0,((h-w)//2)), self.fill, 'constant')
+            newsize = (self.size,round(w/(h/float(w))))
+            totalpadding = newsize[0]-newsize[1]
+            if (totalpadding % 2) != 0: 
+                padding = (totalpadding//2,0,(totalpadding//2)+1,0)
+            else:
+                padding = (totalpadding//2,0,totalpadding//2,0)
+            return torchvision.transform.functional.pad(torchvision.transform.functional.resize(img,newsize), padding, self.fill, 'constant')
         else:
-        return torchvision.transforms.functional.pad(img, (((w-h)//2),0),self.fill, 'constant')
-
+            newsize = (round(h/(w/float(h))),self.size)
+            totalpadding = newsize[1]-newsize[0]
+            if (totalpadding % 2) != 0: 
+                padding = (0,totalpadding//2,0,(totalpadding//2)+1)
+            else:
+                padding = (0,totalpadding//2,0,totalpadding//2)
+            return torchvision.transform.functional.pad(torchvision.transform.functional.resize(img,newsize), padding, self.fill, 'constant')
 
 class TransformsSimCLR:
     """
